@@ -1,0 +1,36 @@
+my:
+  appId: 123
+  jwtKey: 6/ATA2JKtDzT0jhs+loVxzaGiwROIn4bThvdhAIn5wo=
+
+server:
+  port: 80
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: news
+          uri: http://localhost:8080
+          predicates:
+            - Path=/v1/**
+          filters:
+#            - StripPrefix=1
+            - RewritePath=/v1/(?<path>.*),/$\{path}
+            # 顺序相关
+            - TokenCheck
+            - PrePostHeader=developer,xuxianjie
+            - name: CircuitBreaker
+              args:
+                name: fallback
+                fallbackUri: forward:/fallback?appId=${my.appId}
+        - id: news-fallback
+          uri: http://localhost:8081
+          predicates:
+            - Path=/fallback
+            - Query=appId,${my.appId}
+          filters:
+            - RewritePath=/fallback,/gw/news
+
+logging:
+  level:
+    org.springframework.cloud.gateway: warn

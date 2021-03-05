@@ -1,7 +1,7 @@
 package net.wuxianjie.web.aspect;
 
 import net.wuxianjie.common.model.ResponseResult;
-import net.wuxianjie.common.util.ResponseWrappers;
+import net.wuxianjie.common.util.ResponseResultWrappers;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +30,6 @@ public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
       return body;
     }
 
-    return ResponseWrappers.success(body);
+    return ResponseResultWrappers.success(body);
   }
 }

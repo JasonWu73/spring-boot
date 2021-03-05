@@ -4,3 +4,7 @@ server:
     encoding:
       charset: UTF-8
       force: true
+
+logging:
+  level:
+    org.springframework.data.elasticsearch: trace

@@ -3,7 +3,7 @@ package net.wuxianjie.web.aspect;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import net.wuxianjie.common.model.ResponseResult;
-import net.wuxianjie.common.util.ResponseWrappers;
+import net.wuxianjie.common.util.ResponseResultWrappers;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorController;
@@ -37,7 +37,7 @@ public class CustomErrorController implements ErrorController {
 
     log.error("HTTP 状态码: {}, 消息: {}, 错误: {}", httpStatus, message, error);
 
-    return ResponseWrappers.error(error);
+    return ResponseResultWrappers.error(error);
   }
 
   @RequestMapping(produces = MediaType.TEXT_HTML_VALUE)
