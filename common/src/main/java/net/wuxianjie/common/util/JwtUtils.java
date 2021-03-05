@@ -16,16 +16,20 @@ import net.wuxianjie.common.exception.UserAccessDeniedException;
 
 public class JwtUtils {
 
-  public static String generateToken(final String secretKey, final Map<String, Object> claims) {
+  public static String generateToken(final String secretKey,
+    final Map<String, Object> claims, final int expMinutes) {
     return Jwts.builder()
-      .setNotBefore(new Date())
-      .setExpiration(Date.from(LocalDateTime.now().plusMinutes(20).atZone(ZoneId.systemDefault()).toInstant()))
       .setClaims(claims)
+      .setNotBefore(new Date())
+      .setExpiration(Date.from(
+        LocalDateTime.now().plusMinutes(expMinutes)
+          .atZone(ZoneId.systemDefault()).toInstant()))
       .signWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey)))
       .compact();
   }
 
-  public static Claims parseToken(final String secretKey, final String token) throws UserAccessDeniedException {
+  public static Claims parseToken(final String secretKey, final String token)
+    throws UserAccessDeniedException {
     final Jws<Claims> jws;
     try {
       jws = Jwts.parserBuilder()
