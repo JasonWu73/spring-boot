@@ -2,6 +2,7 @@ package net.wuxianjie.gateway.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
 import net.wuxianjie.common.constant.CommonConstants;
 import net.wuxianjie.common.util.JwtUtils;
 import net.wuxianjie.gateway.config.JwtConfig;
@@ -12,19 +13,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/access_token")
 public class AccessTokenController {
 
   private final JwtConfig jwtConfig;
 
-  public AccessTokenController(JwtConfig jwtConfig) {
-    this.jwtConfig = jwtConfig;
-  }
-
   @PostMapping
   public Map<String, String> createAccessToken(
-    @RequestParam(value = "username", required = false) final String username,
-    @RequestParam(value = "password", required = false) final String password) {
+    @RequestParam(value = "username", required = false) String username,
+    @RequestParam(value = "password", required = false) String password) {
+
     if (Strings.isBlank(username) || Strings.isBlank(password)) {
       return new HashMap<>() {{
         put("status", "error");
@@ -45,7 +44,7 @@ public class AccessTokenController {
       }};
     }
 
-    final String token = JwtUtils.generateToken(jwtConfig.getSecretKey(), claims, 1);
+    String token = JwtUtils.generateToken(jwtConfig.getSecretKey(), claims, 1);
 
     return new HashMap<>() {{
       put("status", "success");

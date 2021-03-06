@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.wuxianjie.common.util.ResponseResultWrappers;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
+import org.springframework.cloud.gateway.filter.NettyWriteResponseFilter;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,6 +19,7 @@ import reactor.core.publisher.Mono;
 
 @Slf4j
 @Controller
+@Order(NettyWriteResponseFilter.WRITE_RESPONSE_FILTER_ORDER - 1)
 @RequiredArgsConstructor
 public class CustomErrorWebExceptionHandler implements ErrorWebExceptionHandler {
 
@@ -24,6 +27,18 @@ public class CustomErrorWebExceptionHandler implements ErrorWebExceptionHandler 
 
   @Override
   public Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
+    HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+    if (ex instanceof ResponseStatusException) {
+      httpStatus = ((ResponseStatusException) ex).getStatus();
+    }
+
+    if (httpStatus == HttpStatus.NOT_FOUND) {
+      log.warn("客户端请求地址不存在: {} - {}",
+        exchange.getRequest().getPath(), ex.getMessage());
+    } else {
+      log.error("全局异常处理", ex);
+    }
+
     ServerHttpResponse response = exchange.getResponse();
 
     if (response.isCommitted()) {
@@ -31,13 +46,7 @@ public class CustomErrorWebExceptionHandler implements ErrorWebExceptionHandler 
     }
 
     response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
-    if (ex instanceof ResponseStatusException) {
-      response.setStatusCode(((ResponseStatusException) ex).getStatus());
-    } else {
-      response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    log.error("全局异常处理", ex);
+    response.setStatusCode(httpStatus);
 
     return response
       .writeWith(Mono.fromSupplier(() -> {

@@ -33,7 +33,7 @@ public class PrePostHeaderGatewayFilterFactory
       ).build())
       // post filter
       .then(Mono.fromRunnable(() -> {
-        final ServerHttpResponse response = exchange.getResponse();
+        ServerHttpResponse response = exchange.getResponse();
         response.getHeaders().add("version", "v1.0");
       }));
   }

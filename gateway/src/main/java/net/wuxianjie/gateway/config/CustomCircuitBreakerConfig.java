@@ -19,8 +19,7 @@ public class CustomCircuitBreakerConfig {
         .waitDurationInOpenState(Duration.ofSeconds(60)) // 熔断器开启后多少时间后去尝试请求服务
         .minimumNumberOfCalls(20) // 至少有 n 个请求才进行 `failureRateThreshold` 错误百分比计算
         .failureRateThreshold(0.5f) // 失败率
-        .build()
-      )
+        .build())
       .timeLimiterConfig(TimeLimiterConfig.custom()
         .timeoutDuration(Duration.ofSeconds(5)) // 超时时间
         .build()).build());
