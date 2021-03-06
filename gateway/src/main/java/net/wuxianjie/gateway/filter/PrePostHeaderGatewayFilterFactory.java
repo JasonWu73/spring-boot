@@ -34,6 +34,11 @@ public class PrePostHeaderGatewayFilterFactory
       // post filter
       .then(Mono.fromRunnable(() -> {
         ServerHttpResponse response = exchange.getResponse();
+
+        if (response.isCommitted()) {
+          return;
+        }
+
         response.getHeaders().add("version", "v1.0");
       }));
   }

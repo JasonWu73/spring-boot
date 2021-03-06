@@ -25,7 +25,7 @@ public class CommonConstants {
   /**
    * 网关测试所用域名, 改本地 hosts 文件
    */
-  public static final String DOMAIN_NAME = "http://api.me.com/";
+  public static final String DOMAIN_NAME = "http://api.wxj.com/";
 
   /**
    * Token 验证服务地址

@@ -24,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -93,6 +94,10 @@ public class TokenCheckGatewayFilterFactory
 
     } catch (IllegalArgumentException e) {
       throw new HttpStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+
+    } catch (ResourceAccessException e) {
+      log.error("身份验证服务不可用: {}", e.getMessage());
+      throw new HttpStatusException(HttpStatus.SERVICE_UNAVAILABLE, "糟糕身份验证服务出现了点问题 :(");
 
     } catch (HttpClientErrorException e) {
       try {

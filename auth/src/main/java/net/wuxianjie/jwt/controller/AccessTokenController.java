@@ -65,8 +65,9 @@ public class AccessTokenController {
     }
 
     return new HashMap<>() {{
-      put("valid", true);
       put("username", username);
+      put("nbf", claims.getNotBefore());
+      put("exp", claims.getExpiration());
     }};
   }
 }
