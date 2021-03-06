@@ -22,7 +22,7 @@ public class NewsController {
 
   private final NewsService service;
 
-  @GetMapping("/v1/{newsId:\\d+}")
+  @GetMapping("/cl/{newsId:\\d+}")
   public Map<String, Object> searchNewsByElasticsearchClient(
     @PathVariable int newsId) throws IOException {
 
@@ -59,7 +59,7 @@ public class NewsController {
     return service.getNewsPaging(page, size);
   }
 
-  @GetMapping("/{newsType:[\u4e00-\u9fa5\\w]+}")
+  @GetMapping("/c/{newsType:[\u4e00-\u9fa5\\w]+}")
   public List<News> listNewsByType(@PathVariable("newsType") String type) {
     return service.getNewsListByType(type);
   }

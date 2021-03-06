@@ -1,0 +1,718 @@
+{
+	"info": {
+		"_postman_id": "94cbce8c-cc83-443e-9024-0fb0c138f1f0",
+		"name": "spring-boot",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Gateway",
+			"item": [
+				{
+					"name": "网关 - wxj",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/es/gw/wxj",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"es",
+								"gw",
+								"wxj"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "网关 - jason",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/es/gw/jason",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"es",
+								"gw",
+								"jason"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "网关 - wj",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/es/gw/wj",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"es",
+								"gw",
+								"wj"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "网关 - all",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/es/gw/all",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"es",
+								"gw",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "网关 - 获取 Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"if (jsonData.status === 'success') {",
+									"  pm.collectionVariables.set('token', jsonData.data.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "wxj",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{domain}}/auth/access_token",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"auth",
+								"access_token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "网关 - 验证 Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{domain}}/auth/access_token/verify?token={{token}}",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"auth",
+								"access_token",
+								"verify"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "真实 - wxj",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "CURRENT_USER",
+								"value": "wxj",
+								"type": "text"
+							},
+							{
+								"key": "DEVELOPER",
+								"value": "unkown developer",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8081/gw/wxj",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"gw",
+								"wxj"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "真实 - jason",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "CURRENT_USER",
+								"value": "jason",
+								"type": "text"
+							},
+							{
+								"key": "DEVELOPER",
+								"value": "unkown developer",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8081/gw/jason",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"gw",
+								"jason"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "真实 - wj",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "CURRENT_USER",
+								"value": "wxj",
+								"type": "text"
+							},
+							{
+								"key": "DEVELOPER",
+								"value": "unkown developer",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8081/gw/wj",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"gw",
+								"wj"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "真实 - all",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "CURRENT_USER",
+								"value": "unkown user",
+								"type": "text"
+							},
+							{
+								"key": "DEVELOPER",
+								"value": "unkown developer",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8081/gw/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"gw",
+								"all"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Auth - 获取 Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"if (jsonData.status === 'success') {",
+									"  pm.collectionVariables.set('token', jsonData.data.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "wxj",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/access_token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"access_token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Auth - 验证 Token",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "wxj",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/access_token/verify?token={{token}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"access_token",
+								"verify"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Elasticsearch",
+			"item": [
+				{
+					"name": "HLRC - 指定新闻",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/es/news/cl/101",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"es",
+								"news",
+								"cl",
+								"101"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SDE - 指定新闻",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/es/news/101",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"es",
+								"news",
+								"101"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SDE - 新增新闻",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"测试新闻开头\",\n  \"type\": \"测试\",\n  \"addTime\": \"2021-03-06 13:29:37\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/es/news/1001",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"es",
+								"news",
+								"1001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SDE - 所有新闻",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/es/news/all",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"es",
+								"news",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SDE - 分页新闻",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/es/news?p=1&s=4",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"es",
+								"news"
+							],
+							"query": [
+								{
+									"key": "p",
+									"value": "1"
+								},
+								{
+									"key": "s",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SDE - 类别新闻",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/es/news/c/Google",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"es",
+								"news",
+								"c",
+								"Google"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "domain",
+			"value": "http://api.me.com"
+		},
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}

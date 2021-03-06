@@ -46,7 +46,7 @@ public class AccessTokenController {
       throw new AuthenticationException("用户名或密码错误");
     }
 
-    String token = JwtUtils.generateToken(jwtConfig.getSecretKey(), claims, 1);
+    String token = JwtUtils.generateToken(jwtConfig.getSecretKey(), claims, 20);
 
     return new HashMap<>() {{
       put("token", token);

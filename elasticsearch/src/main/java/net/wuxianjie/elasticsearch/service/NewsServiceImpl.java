@@ -68,7 +68,7 @@ public class NewsServiceImpl implements NewsService {
     news.forEach(list::add);
 
     return new DataPaging<>() {{
-      setCurrent(page);
+      setCurrent(page + 1);
       setSize(size);
       setList(list);
       setTotal(news.getTotalElements());
@@ -77,7 +77,6 @@ public class NewsServiceImpl implements NewsService {
 
   @Override
   public List<News> getNewsListByType(String type) {
-
     return repository.findByType(type);
   }
 }
