@@ -11,8 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class FallbackController {
 
-  @RequestMapping(CommonConstants.PATH_UNAUTHORIZED)
+  @RequestMapping("/fallback")
+  public ResponseEntity<ResponseResult<Void>> fallback() {
+    return new ResponseEntity<>(ResponseResultWrappers.error("糟糕认证服务出现了点问题 :("), HttpStatus.UNAUTHORIZED);
+  }
+
+  @RequestMapping(CommonConstants.PATH_UNAUTHENTICATED)
   public ResponseEntity<ResponseResult<Void>> unauthorized() {
-    return new ResponseEntity<>(ResponseResultWrappers.error("你不要乱搞哦"), HttpStatus.UNAUTHORIZED);
+    return new ResponseEntity<>(ResponseResultWrappers.error("你不要乱搞哦 :)"), HttpStatus.UNAUTHORIZED);
   }
 }

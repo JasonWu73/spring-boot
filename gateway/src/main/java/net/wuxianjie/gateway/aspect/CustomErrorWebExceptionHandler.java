@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.wuxianjie.common.exception.HttpStatusException;
 import net.wuxianjie.common.util.ResponseResultWrappers;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.cloud.gateway.filter.NettyWriteResponseFilter;
@@ -29,13 +30,17 @@ public class CustomErrorWebExceptionHandler implements ErrorWebExceptionHandler 
   public Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
 
     HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+
     if (ex instanceof ResponseStatusException) {
       httpStatus = ((ResponseStatusException) ex).getStatus();
     }
 
-    if (httpStatus == HttpStatus.NOT_FOUND) {
-      log.warn("客户端请求地址不存在: {} - {}",
-        exchange.getRequest().getPath(), ex.getMessage());
+    if (ex instanceof HttpStatusException) {
+      httpStatus = ((HttpStatusException) ex).getHttpStatus();
+    }
+
+    if (httpStatus.is4xxClientError()) {
+      log.warn("客户端错误: {} - {}", exchange.getRequest().getPath(), ex.getMessage());
     } else {
       log.error("全局异常处理", ex);
     }
@@ -54,7 +59,8 @@ public class CustomErrorWebExceptionHandler implements ErrorWebExceptionHandler 
         DataBufferFactory bufferFactory = response.bufferFactory();
         try {
           return bufferFactory.wrap(objectMapper.writeValueAsBytes(
-            ResponseResultWrappers.error(ex.getMessage())));
+            ResponseResultWrappers.error(
+              ex.getMessage() != null ? ex.getMessage() : "Null Pointer Exception")));
         } catch (JsonProcessingException e) {
           log.error("响应时数据异常", ex);
           return bufferFactory.wrap(new byte[0]);

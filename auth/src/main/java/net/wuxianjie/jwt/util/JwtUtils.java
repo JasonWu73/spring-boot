@@ -1,4 +1,4 @@
-package net.wuxianjie.common.util;
+package net.wuxianjie.jwt.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Map;
-import net.wuxianjie.common.exception.UserAccessDeniedException;
+import net.wuxianjie.common.exception.AuthenticationException;
 
 public class JwtUtils {
 
@@ -30,7 +30,7 @@ public class JwtUtils {
   }
 
   public static Claims parseToken(String secretKey, String token)
-    throws UserAccessDeniedException {
+    throws AuthenticationException {
 
     Jws<Claims> jws;
 
@@ -43,11 +43,11 @@ public class JwtUtils {
       return jws.getBody();
 
     } catch (MalformedJwtException e) {
-      throw new UserAccessDeniedException("Token 格式错误: " + e.getMessage(), e);
+      throw new AuthenticationException("Token 格式错误: " + e.getMessage(), e);
     } catch (SignatureException e) {
-      throw new UserAccessDeniedException("Token 签名错误: " + e.getMessage(), e);
+      throw new AuthenticationException("Token 签名错误: " + e.getMessage(), e);
     } catch (ExpiredJwtException e) {
-      throw new UserAccessDeniedException("Token 已过期: " + e.getMessage(), e);
+      throw new AuthenticationException("Token 已过期: " + e.getMessage(), e);
     }
   }
 }

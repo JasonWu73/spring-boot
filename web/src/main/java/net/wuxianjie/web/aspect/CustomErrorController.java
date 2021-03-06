@@ -37,7 +37,11 @@ public class CustomErrorController implements ErrorController {
     Integer httpStatus = (Integer) errorMap.get("status");
     String error = (String) errorMap.get("error");
 
-    log.error("全局异常处理: {}", errorMap);
+    if (httpStatus == HttpStatus.NOT_FOUND.value()) {
+      log.warn("全局异常处理: {}", errorMap);
+    } else {
+      log.error("全局异常处理: {}", errorMap);
+    }
 
     return new ResponseEntity<>(ResponseResultWrappers.error(error),
       Objects.requireNonNull(HttpStatus.resolve(httpStatus)));

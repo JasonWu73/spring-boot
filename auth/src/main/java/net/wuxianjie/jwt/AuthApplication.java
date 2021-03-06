@@ -1,12 +1,12 @@
-package net.wuxianjie.web;
+package net.wuxianjie.jwt;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(scanBasePackages = "net.wuxianjie")
-public class WebApplication {
+public class AuthApplication {
 
   public static void main(String[] args) {
-    SpringApplication.run(WebApplication.class, args);
+    SpringApplication.run(AuthApplication.class, args);
   }
 }

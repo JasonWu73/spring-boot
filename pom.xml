@@ -18,6 +18,7 @@
 
   <modules>
     <module>web</module>
+    <module>auth</module>
     <module>common</module>
     <module>gateway</module>
     <module>elasticsearch</module>

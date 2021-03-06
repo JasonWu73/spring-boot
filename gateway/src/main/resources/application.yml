@@ -1,6 +1,5 @@
 my:
   appId: 123
-  jwtKey: 6/ATA2JKtDzT0jhs+loVxzaGiwROIn4bThvdhAIn5wo=
 
 server:
   port: 80
@@ -9,27 +8,46 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: news
+        - id: auth
           uri: http://localhost:8080
           predicates:
-            - Path=/v1/**
+            - Path=/auth/**
           filters:
-#            - StripPrefix=1
-            - RewritePath=/v1/(?<path>.*),/$\{path}
+            - StripPrefix=1
             # 顺序相关
-            - TokenCheck
-            - PrePostHeader=developer,xuxianjie
+            - PrePostHeader=developer,xuxianjie-auth
             - name: CircuitBreaker
               args:
-                name: fallback
-                fallbackUri: forward:/fallback?appId=${my.appId}
-        - id: news-fallback
-          uri: http://localhost:8081
+                name: authFallback
+                fallbackUri: forward:/fallback/auth?appId=${my.appId}
+        - id: authFallback
+          uri: http://localhost
           predicates:
-            - Path=/fallback
+            - Path=/fallback/auth
             - Query=appId,${my.appId}
           filters:
-            - RewritePath=/fallback,/gw/news
+            - RewritePath=/fallback/auth,/fallback
+
+        - id: es
+          uri: http://localhost:8081
+          predicates:
+            - Path=/es/**
+          filters:
+            - RewritePath=/es/(?<path>.*),/$\{path}
+            # 顺序相关
+            - TokenCheck
+            - PrePostHeader=developer,xuxianjie-es
+            - name: CircuitBreaker
+              args:
+                name: esFallback
+                fallbackUri: forward:/fallback/news?appId=${my.appId}
+        - id: esFallback
+          uri: http://localhost:8082
+          predicates:
+            - Path=/fallback/news
+            - Query=appId,${my.appId}
+          filters:
+            - RewritePath=/fallback/news,/gw/news
 
 logging:
   level:

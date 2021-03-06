@@ -12,6 +12,8 @@
 
   <artifactId>web</artifactId>
 
+  <description>为 Spring Boot Web 项目提供了一些能用配置</description>
+
   <dependencies>
     <!-- Common Submodule -->
     <dependency>
@@ -20,34 +22,16 @@
       <version>${project.version}</version>
     </dependency>
 
-    <!-- Elasticsearch -->
-    <dependency>
-      <groupId>net.wuxianjie</groupId>
-      <artifactId>elasticsearch</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
     <!-- Spring Web -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
-  </dependencies>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-        <configuration>
-          <excludes>
-            <exclude>
-              <groupId>org.projectlombok</groupId>
-              <artifactId>lombok</artifactId>
-            </exclude>
-          </excludes>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+    <!-- Bean Validation -->
+    <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+  </dependencies>
 </project>

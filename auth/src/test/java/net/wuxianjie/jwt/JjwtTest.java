@@ -1,4 +1,4 @@
-package net.wuxianjie.common;
+package net.wuxianjie.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

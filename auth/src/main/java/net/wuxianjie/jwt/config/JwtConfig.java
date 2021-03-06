@@ -1,4 +1,4 @@
-package net.wuxianjie.gateway.config;
+package net.wuxianjie.jwt.config;
 
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;

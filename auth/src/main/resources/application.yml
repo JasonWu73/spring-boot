@@ -1,0 +1,5 @@
+my:
+  jwtKey: 6/ATA2JKtDzT0jhs+loVxzaGiwROIn4bThvdhAIn5wo=
+
+server:
+  port: 8080

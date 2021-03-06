@@ -1,4 +1,4 @@
-package net.wuxianjie.web.controller;
+package net.wuxianjie.elasticsearch.controller;
 
 import java.io.IOException;
 import java.util.List;
