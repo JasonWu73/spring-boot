@@ -13,6 +13,6 @@ public class FallbackController {
 
   @RequestMapping(CommonConstants.PATH_UNAUTHORIZED)
   public ResponseEntity<ResponseResult<Void>> unauthorized() {
-    return new ResponseEntity<>(ResponseResultWrappers.error("请不要乱搞"), HttpStatus.UNAUTHORIZED);
+    return new ResponseEntity<>(ResponseResultWrappers.error("你不要乱搞哦"), HttpStatus.UNAUTHORIZED);
   }
 }

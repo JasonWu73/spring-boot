@@ -4,7 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import net.wuxianjie.common.constant.CommonConstants;
+import net.wuxianjie.common.exception.UserAccessDeniedException;
+import net.wuxianjie.common.model.ResponseResult;
 import net.wuxianjie.common.util.JwtUtils;
+import net.wuxianjie.common.util.ResponseResultWrappers;
 import net.wuxianjie.gateway.config.JwtConfig;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,15 +23,13 @@ public class AccessTokenController {
   private final JwtConfig jwtConfig;
 
   @PostMapping
-  public Map<String, String> createAccessToken(
+  public ResponseResult<Map<String, String>> createAccessToken(
     @RequestParam(value = "username", required = false) String username,
-    @RequestParam(value = "password", required = false) String password) {
+    @RequestParam(value = "password", required = false) String password)
+    throws UserAccessDeniedException {
 
     if (Strings.isBlank(username) || Strings.isBlank(password)) {
-      return new HashMap<>() {{
-        put("status", "error");
-        put("error", "用户名或密码为空");
-      }};
+      throw new UserAccessDeniedException("用户名或密码为空");
     }
 
     Map<String, Object> claims = new HashMap<>();
@@ -38,17 +39,13 @@ public class AccessTokenController {
     } else if (username.equals("jason") && password.equals("123")) {
       claims.put(CommonConstants.TOKEN_USERNAME, "jason");
     } else {
-      return new HashMap<>() {{
-        put("status", "error");
-        put("error", "用户名或密码错误");
-      }};
+      throw new UserAccessDeniedException("用户名或密码错误");
     }
 
     String token = JwtUtils.generateToken(jwtConfig.getSecretKey(), claims, 1);
 
-    return new HashMap<>() {{
-      put("status", "success");
+    return ResponseResultWrappers.success(new HashMap<>() {{
       put("token", token);
-    }};
+    }});
   }
 }
