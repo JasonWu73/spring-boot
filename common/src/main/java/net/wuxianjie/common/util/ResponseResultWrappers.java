@@ -4,9 +4,9 @@ import net.wuxianjie.common.model.ResponseResult;
 
 public class ResponseResultWrappers {
 
-  public static ResponseResult<Object> success(Object data) {
+  public static <T> ResponseResult<T> success(T data) {
 
-    ResponseResult<Object> result = new ResponseResult<>();
+    ResponseResult<T> result = new ResponseResult<>();
 
     result.setStatus("success");
     result.setData(data);

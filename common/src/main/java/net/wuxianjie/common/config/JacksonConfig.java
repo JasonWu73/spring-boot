@@ -1,4 +1,4 @@
-package net.wuxianjie.web.config;
+package net.wuxianjie.common.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.DeserializationFeature;
