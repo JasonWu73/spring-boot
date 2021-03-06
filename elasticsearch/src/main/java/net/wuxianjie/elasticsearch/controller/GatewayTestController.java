@@ -16,6 +16,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/gw")
 public class GatewayTestController {
 
+  @GetMapping("/news")
+  public Map<String, Object> fallback(
+    @RequestHeader(CommonConstants.REQUEST_HEADER_USERNAME) String user,
+    @RequestHeader(CommonConstants.REQUEST_HEADER_DEVELOPER) String developer
+  ) throws AuthenticationException {
+
+    return new HashMap<>() {{
+      put("title", "降级后的静态新闻");
+      put("author", "吴仙杰");
+      put("user", user);
+      put("developer", developer);
+    }};
+  }
+
   @Auth("wxj")
   @GetMapping("/wxj")
   public Map<String, Object> wxj(
