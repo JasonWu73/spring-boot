@@ -21,36 +21,39 @@ import org.junit.jupiter.api.Test;
 public class JjwtTest {
 
   public static final String SECRET_KEY = "6/ATA2JKtDzT0jhs+loVxzaGiwROIn4bThvdhAIn5wo=";
+
   public static final String JWT = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoid3V4aWFuamllIn0.hUKPFLX8uhkC1e39_Qv-wYNVGkbo7kYzosjlbRjgeRY";
 
   @Test
   public void createSecretKey() {
 
-    final SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    final String secretString = Encoders.BASE64.encode(key.getEncoded());
+    SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    String secretString = Encoders.BASE64.encode(key.getEncoded());
+
     log.info("JWT 密钥: {}", secretString);
   }
 
   @Test
   public void createJws() {
 
-    final Map<String, Object> claims = new HashMap<>() {{
+    Map<String, Object> claims = new HashMap<>() {{
       put("user", "wuxianjie");
     }};
 
-    final String jws = Jwts.builder()
+    String jws = Jwts.builder()
       .setNotBefore(new Date())
       .setExpiration(Date.from(LocalDateTime.now().plusMinutes(20).atZone(ZoneId.systemDefault()).toInstant()))
       .setClaims(claims)
       .signWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(JjwtTest.SECRET_KEY)))
       .compact();
+
     log.info("生成 JWT: {}", jws);
   }
 
   @Test
   public void readJws() {
 
-    final Jws<Claims> jws;
+    Jws<Claims> jws;
 
     try {
       jws = Jwts.parserBuilder()
@@ -58,8 +61,10 @@ public class JjwtTest {
         .build()
         .parseClaimsJws(JjwtTest.JWT);
 
-      final Claims body = jws.getBody();
+      Claims body = jws.getBody();
+
       log.info("读取 JWT 主体信息 [user: {}]", body.get("user"));
+
     } catch (JwtException e) {
       log.warn("JWT 验证失败: {}", e.getMessage());
     }

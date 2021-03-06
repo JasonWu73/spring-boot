@@ -31,11 +31,9 @@ public class CustomErrorController implements ErrorController {
     Map<String, Object> errorMap = errorAttributes.getErrorAttributes(request,
       ErrorAttributeOptions.defaults());
 
-    Integer httpStatus = (Integer) errorMap.get("status");
-    String message = (String) errorMap.get("message");
     String error = (String) errorMap.get("error");
 
-    log.error("HTTP 状态码: {}, 消息: {}, 错误: {}", httpStatus, message, error);
+    log.error("全局异常处理: {}", errorMap);
 
     return ResponseResultWrappers.error(error);
   }

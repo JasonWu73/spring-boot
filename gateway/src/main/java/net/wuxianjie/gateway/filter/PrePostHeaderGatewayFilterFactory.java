@@ -42,6 +42,7 @@ public class PrePostHeaderGatewayFilterFactory
   public static class Config {
 
     private String name;
+
     private String value;
   }
 }

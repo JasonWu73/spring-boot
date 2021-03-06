@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Configuration;
 public class JacksonConfig {
 
   public static final String DATE_FORMAT = "yyyy-MM-dd";
+
   public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
   @Bean
@@ -34,7 +35,8 @@ public class JacksonConfig {
 
   @Bean
   public ObjectMapper objectMapper() {
-    final ObjectMapper mapper = new ObjectMapper();
+
+    ObjectMapper mapper = new ObjectMapper();
 
     // property 命名转换仅对 POJO 有效，故对 `java.util.Map` 是无效的
     //mapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
@@ -44,7 +46,7 @@ public class JacksonConfig {
     mapper.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
     mapper.setDateFormat(new SimpleDateFormat(DATE_TIME_FORMAT));
 
-    final JavaTimeModule javaTimeModule = new JavaTimeModule();
+    JavaTimeModule javaTimeModule = new JavaTimeModule();
     javaTimeModule.addSerializer(LocalDate.class,
       new LocalDateSerializer(DateTimeFormatter.ofPattern(DATE_FORMAT)));
     javaTimeModule.addSerializer(LocalDateTime.class,

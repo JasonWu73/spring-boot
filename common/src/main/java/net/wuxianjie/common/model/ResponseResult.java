@@ -5,7 +5,21 @@ import lombok.Data;
 @Data
 public class ResponseResult<T> {
 
+  /**
+   * <ul>
+   *   <li>成功: {@code success}</li>
+   *   <li>失败: {@code error}</li>
+   * </ul>
+   */
   private String status;
-  private String error; // 若请求成功, 则不需要返回该字段给前端
-  private T data; // 若请求失败, 则不需要返回该字段给前端
+
+  /**
+   * 错误信息
+   */
+  private String error;
+
+  /**
+   * 结果字段
+   */
+  private T data;
 }

@@ -16,8 +16,9 @@ import net.wuxianjie.common.exception.UserAccessDeniedException;
 
 public class JwtUtils {
 
-  public static String generateToken(final String secretKey,
-    final Map<String, Object> claims, final int expMinutes) {
+  public static String generateToken(String secretKey,
+    Map<String, Object> claims, int expMinutes) {
+
     return Jwts.builder()
       .setClaims(claims)
       .setNotBefore(new Date())
@@ -28,9 +29,11 @@ public class JwtUtils {
       .compact();
   }
 
-  public static Claims parseToken(final String secretKey, final String token)
+  public static Claims parseToken(String secretKey, String token)
     throws UserAccessDeniedException {
-    final Jws<Claims> jws;
+
+    Jws<Claims> jws;
+
     try {
       jws = Jwts.parserBuilder()
         .setSigningKey(Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey)))
@@ -38,12 +41,13 @@ public class JwtUtils {
         .parseClaimsJws(token);
 
       return jws.getBody();
+
     } catch (MalformedJwtException e) {
-      throw new UserAccessDeniedException("Token 格式错误: " + e.getMessage());
+      throw new UserAccessDeniedException("Token 格式错误: " + e.getMessage(), e);
     } catch (SignatureException e) {
-      throw new UserAccessDeniedException("Token 签名错误: " + e.getMessage());
+      throw new UserAccessDeniedException("Token 签名错误: " + e.getMessage(), e);
     } catch (ExpiredJwtException e) {
-      throw new UserAccessDeniedException("Token 已过期: " + e.getMessage());
+      throw new UserAccessDeniedException("Token 已过期: " + e.getMessage(), e);
     }
   }
 }

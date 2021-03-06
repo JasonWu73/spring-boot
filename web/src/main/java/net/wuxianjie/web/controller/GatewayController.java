@@ -21,9 +21,10 @@ public class GatewayController {
 
   @GetMapping("/news")
   public List<Map<String, Object>> newsList(
-    @RequestHeader(value = CommonConstants.REQUEST_HEADER_USERNAME, required = false) final String user,
-    @RequestHeader(value = "developer", required = false) final String developer
+    @RequestHeader(value = CommonConstants.REQUEST_HEADER_USERNAME, required = false) String user,
+    @RequestHeader(value = "developer", required = false) String developer
   ) throws UserAccessDeniedException {
+
     log.info("开发者 -> {}", developer);
     log.info("用户 -> {}", user);
 

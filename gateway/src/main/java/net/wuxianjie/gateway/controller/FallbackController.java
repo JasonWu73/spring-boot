@@ -13,6 +13,6 @@ public class FallbackController {
 
   @RequestMapping(CommonConstants.PATH_UNAUTHORIZED)
   public ResponseEntity<ResponseResult<Void>> unauthorized() {
-    return new ResponseEntity<>(ResponseResultWrappers.error("Token 验证失败"), HttpStatus.UNAUTHORIZED);
+    return new ResponseEntity<>(ResponseResultWrappers.error("请不要乱搞"), HttpStatus.UNAUTHORIZED);
   }
 }

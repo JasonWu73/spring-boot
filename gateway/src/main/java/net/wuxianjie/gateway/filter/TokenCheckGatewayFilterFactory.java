@@ -46,6 +46,7 @@ public class TokenCheckGatewayFilterFactory
         // 将用户名写入请求头中
         return chain.filter(exchange.mutate().request(builder ->
           builder.header(CommonConstants.REQUEST_HEADER_USERNAME, username)).build());
+
       } catch (UserAccessDeniedException e) {
         log.warn(e.getMessage());
 
@@ -68,7 +69,9 @@ public class TokenCheckGatewayFilterFactory
   }
 
   private String getToken(ServerWebExchange exchange) throws UserAccessDeniedException {
+
     String bearerHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
+
     if (Strings.isBlank(bearerHeader)) {
       throw new UserAccessDeniedException(String.format("请求头 %s 不存在", HttpHeaders.AUTHORIZATION));
     }

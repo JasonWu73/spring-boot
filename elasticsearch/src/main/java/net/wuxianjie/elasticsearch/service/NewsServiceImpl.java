@@ -27,7 +27,7 @@ public class NewsServiceImpl implements NewsService {
   @Override
   public Map<String, Object> getNewsByElasticClient(int newsId) throws IOException {
 
-    final GetRequest request = new GetRequest().id(String.valueOf(newsId)).index("news");
+    GetRequest request = new GetRequest().id(String.valueOf(newsId)).index("news");
 
     return client.get(request, RequestOptions.DEFAULT).getSource();
   }
@@ -35,7 +35,7 @@ public class NewsServiceImpl implements NewsService {
   @Override
   public News getNews(int newsId) {
 
-    final Optional<News> optional = repository.findById(newsId);
+    Optional<News> optional = repository.findById(newsId);
 
     return optional.orElse(null);
   }
@@ -51,9 +51,9 @@ public class NewsServiceImpl implements NewsService {
   @Override
   public List<News> getAllNewsList() {
 
-    final Iterable<News> iterable = repository.findAll();
+    Iterable<News> iterable = repository.findAll();
 
-    final List<News> list = new ArrayList<>();
+    List<News> list = new ArrayList<>();
     iterable.forEach(list::add);
 
     return list;
@@ -62,9 +62,9 @@ public class NewsServiceImpl implements NewsService {
   @Override
   public DataPaging<List<News>> getNewsPaging(int page, int size) {
 
-    final Page<News> news = repository.findAll(PageRequest.of(page, size));
+    Page<News> news = repository.findAll(PageRequest.of(page, size));
 
-    final List<News> list = new ArrayList<>();
+    List<News> list = new ArrayList<>();
     news.forEach(list::add);
 
     return new DataPaging<>() {{

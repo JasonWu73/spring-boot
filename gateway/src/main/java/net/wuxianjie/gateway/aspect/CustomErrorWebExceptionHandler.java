@@ -27,6 +27,7 @@ public class CustomErrorWebExceptionHandler implements ErrorWebExceptionHandler 
 
   @Override
   public Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
+
     HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
     if (ex instanceof ResponseStatusException) {
       httpStatus = ((ResponseStatusException) ex).getStatus();

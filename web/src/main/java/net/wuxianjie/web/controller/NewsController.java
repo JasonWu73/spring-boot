@@ -31,7 +31,6 @@ public class NewsController {
 
   @GetMapping("/{newsId:\\d+}")
   public News searchNewsById(@PathVariable int newsId) {
-
     return service.getNews(newsId);
   }
 
@@ -39,13 +38,11 @@ public class NewsController {
   public News addNews(@PathVariable int newsId, @RequestBody News news) {
 
     news.setId(newsId);
-
     return service.saveNews(news);
   }
 
   @GetMapping("/all")
   public List<News> listAllNews() {
-
     return service.getAllNewsList();
   }
 
