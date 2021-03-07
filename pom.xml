@@ -19,6 +19,7 @@
   <modules>
     <module>web</module>
     <module>auth</module>
+    <module>redis</module>
     <module>common</module>
     <module>gateway</module>
     <module>elasticsearch</module>
@@ -27,6 +28,7 @@
   <properties>
     <java.version>11</java.version>
 
+    <my.submodule.version>${project.version}</my.submodule.version>
     <jjwt.version>0.11.2</jjwt.version>
   </properties>
 
@@ -48,6 +50,48 @@
 
   <dependencyManagement>
     <dependencies>
+      <!-- 公共模块 -->
+      <dependency>
+        <groupId>net.wuxianjie</groupId>
+        <artifactId>common</artifactId>
+        <version>${my.submodule.version}</version>
+      </dependency>
+
+      <!-- 公共 Spring Boot web 配置模块 -->
+      <dependency>
+        <groupId>net.wuxianjie</groupId>
+        <artifactId>web</artifactId>
+        <version>${my.submodule.version}</version>
+      </dependency>
+
+      <!-- Redis -->
+      <dependency>
+        <groupId>net.wuxianjie</groupId>
+        <artifactId>redis</artifactId>
+        <version>${my.submodule.version}</version>
+      </dependency>
+
+      <!-- Elasticsearch -->
+      <dependency>
+        <groupId>net.wuxianjie</groupId>
+        <artifactId>elasticsearch</artifactId>
+        <version>${my.submodule.version}</version>
+      </dependency>
+
+      <!-- 身份验证模块 -->
+      <dependency>
+        <groupId>net.wuxianjie</groupId>
+        <artifactId>auth</artifactId>
+        <version>${my.submodule.version}</version>
+      </dependency>
+
+      <!-- 网关 -->
+      <dependency>
+        <groupId>net.wuxianjie</groupId>
+        <artifactId>gateway</artifactId>
+        <version>${my.submodule.version}</version>
+      </dependency>
+
       <!-- JJWT -->
       <dependency>
         <groupId>io.jsonwebtoken</groupId>

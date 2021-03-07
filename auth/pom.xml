@@ -17,7 +17,11 @@
     <dependency>
       <groupId>net.wuxianjie</groupId>
       <artifactId>web</artifactId>
-      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>net.wuxianjie</groupId>
+      <artifactId>redis</artifactId>
     </dependency>
 
     <!-- JJWT -->

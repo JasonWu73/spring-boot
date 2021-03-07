@@ -5,30 +5,18 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>net.wuxianjie</groupId>
     <artifactId>spring-boot</artifactId>
+    <groupId>net.wuxianjie</groupId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
 
-  <artifactId>elasticsearch</artifactId>
+  <artifactId>redis</artifactId>
 
   <dependencies>
-    <!-- Spring Boot Web -->
-    <dependency>
-      <groupId>net.wuxianjie</groupId>
-      <artifactId>web</artifactId>
-    </dependency>
-
-    <!-- Spring Data Elasticsearch (Access + Driver) -->
+    <!-- Spring Data Redis (Access + Driver) -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
-    </dependency>
-
-    <!-- AOP -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-aop</artifactId>
+      <artifactId>spring-boot-starter-data-redis</artifactId>
     </dependency>
   </dependencies>
 </project>

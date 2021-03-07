@@ -19,7 +19,6 @@
     <dependency>
       <groupId>net.wuxianjie</groupId>
       <artifactId>common</artifactId>
-      <version>${project.version}</version>
     </dependency>
 
     <!-- Spring Web -->
