@@ -19,9 +19,10 @@
       <artifactId>web</artifactId>
     </dependency>
 
+    <!-- Spring Data Redis (Access + Driver) -->
     <dependency>
-      <groupId>net.wuxianjie</groupId>
-      <artifactId>redis</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-redis</artifactId>
     </dependency>
 
     <!-- JJWT -->
