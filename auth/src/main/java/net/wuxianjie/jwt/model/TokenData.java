@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ParseToken {
+public class TokenData {
 
   private String username;
 
-  private Date nbf;
+  private String type;
 
-  private Date exp;
+  private Date nbf;
 }

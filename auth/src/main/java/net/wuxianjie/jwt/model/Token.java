@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateToken {
+public class Token {
 
   /**
    * 剩余有效时间 (秒)
@@ -15,4 +15,9 @@ public class CreateToken {
   private Long expire;
 
   private String token;
+
+  /**
+   * 只用于刷新的 Token. 可避免再次输入用户名和密码
+   */
+  private String refreshToken;
 }

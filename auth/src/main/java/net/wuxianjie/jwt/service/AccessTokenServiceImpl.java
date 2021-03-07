@@ -5,20 +5,26 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
-import net.wuxianjie.common.constant.CommonConstants;
 import net.wuxianjie.common.exception.AuthenticationException;
 import net.wuxianjie.jwt.config.JwtConfig;
 import net.wuxianjie.jwt.constant.RedisKeyConstants;
-import net.wuxianjie.jwt.model.CreateToken;
-import net.wuxianjie.jwt.model.ParseToken;
+import net.wuxianjie.jwt.model.Token;
+import net.wuxianjie.jwt.model.TokenData;
 import net.wuxianjie.jwt.util.JwtUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class AccessTokenServiceImpl implements AccessTokenService {
+
+  public static final String TOKEN_USERNAME = "user";
+
+  public static final String TOKEN_TYPE = "type";
+
+  public static final String TOKEN_TYPE_REFRESH_VALUE = "refresh";
 
   public static final int EXPIRED_ON_MINUTES = 1;
 
@@ -27,7 +33,7 @@ public class AccessTokenServiceImpl implements AccessTokenService {
   private final StringRedisTemplate stringRedisTemplate;
 
   @Override
-  public CreateToken getOrCreateToken(String username, String password)
+  public Token getOrCreateToken(String username, String password)
     throws AuthenticationException {
 
     Map<String, Object> claims = new HashMap<>();
@@ -36,74 +42,141 @@ public class AccessTokenServiceImpl implements AccessTokenService {
       (username.equals("jason") && password.equals("123")) ||
       (username.equals("bruce") && password.equals("123"))) {
 
-      CreateToken tokenResult = getTokenFromRedis(username);
+      Token tokenResult = getTokenFromRedis(username);
 
-      if (tokenResult != null) {
+      if (tokenResult != null && tokenResult.getToken() != null) {
         return tokenResult;
       }
 
-      claims.put(CommonConstants.TOKEN_USERNAME, username);
+      claims.put(TOKEN_USERNAME, username);
     } else {
       throw new AuthenticationException("用户名或密码错误");
     }
 
-    String token = JwtUtils.generateToken(jwtConfig.getSecretKey(), claims, EXPIRED_ON_MINUTES);
+    String token = JwtUtils.generateToken(jwtConfig.getSecretKey(), claims);
 
-    setTokenToRedis(username, token);
+    claims.put(TOKEN_TYPE, TOKEN_TYPE_REFRESH_VALUE);
+    String refreshToken = JwtUtils.generateToken(jwtConfig.getSecretKey(), claims);
 
-    return new CreateToken(EXPIRED_ON_MINUTES * 60L, token);
+    setTokenToRedis(username, token, refreshToken);
+
+    return new Token(EXPIRED_ON_MINUTES * 60L, token, refreshToken);
   }
 
   @Override
-  public ParseToken verifyToken(String token) throws AuthenticationException {
+  public TokenData verifyToken(String token) throws AuthenticationException {
     // 解析 Token
-    ParseToken tokenData = parseToken(token);
+    TokenData tokenData = parseToken(token);
 
     // 判断该 Token 是否存在于 Redis
-    CreateToken tokenRedis = getTokenFromRedis(tokenData.getUsername());
+    Token tokenRedis = getTokenFromRedis(tokenData.getUsername());
 
     if (tokenRedis == null) {
       throw new AuthenticationException("Token 已失效");
     }
 
-    return tokenData;
+    if (tokenRedis.getToken() != null && tokenRedis.getToken().equals(token)) {
+      return tokenData;
+    }
+
+    if (tokenRedis.getRefreshToken() != null && tokenRedis.getRefreshToken().equals(token)) {
+      return tokenData;
+    }
+
+    throw new AuthenticationException("Token 已失效");
   }
 
-  private CreateToken getTokenFromRedis(String username) {
+  @Override
+  public Token refreshToken(String token) throws AuthenticationException {
+    // 解析 Token
+    TokenData tokenData = parseToken(token);
+
+    // 判断 Token 是否为用于刷新的 Token
+    if (tokenData.getType() == null ||
+      !tokenData.getType().equals(TOKEN_TYPE_REFRESH_VALUE)) {
+      throw new AuthenticationException("不是用于刷新的 Token");
+    }
+
+    // 判断 Token 是否存在于 Redis 中, 且与用于刷新的 Token 是否一致
+    Token tokenRedis = getTokenFromRedis(tokenData.getUsername());
+
+    if (tokenRedis == null ||
+      tokenRedis.getRefreshToken() == null ||
+      !tokenRedis.getRefreshToken().equals(token)) {
+      throw new AuthenticationException("Token 已失效");
+    }
+
+    // 生成用于访问和刷新的 Token
+    Map<String, Object> claims = new HashMap<>();
+
+    claims.put(TOKEN_USERNAME, tokenData.getUsername());
+
+    String newToken = JwtUtils.generateToken(jwtConfig.getSecretKey(), claims);
+
+    claims.put(TOKEN_TYPE, TOKEN_TYPE_REFRESH_VALUE);
+    String refreshToken = JwtUtils.generateToken(jwtConfig.getSecretKey(), claims);
+
+    // 将生成的 Token 加入 Redis 中
+    setTokenToRedis(tokenData.getUsername(), newToken, refreshToken);
+
+    return new Token(EXPIRED_ON_MINUTES * 60L, newToken, refreshToken);
+  }
+
+  private Token getTokenFromRedis(String username) {
 
     String tokenKey = getTokenKeyInRedis(username);
+    String refreshTokenKey = getRefreshTokenKeyInRedis(username);
 
-    String token = stringRedisTemplate.opsForValue().get(tokenKey);
+    ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
+
+    String token = operations.get(tokenKey);
+    String refreshToken = operations.get(refreshTokenKey);
 
     if (token != null) {
-      return new CreateToken(stringRedisTemplate.getExpire(tokenKey), token);
+      return new Token(stringRedisTemplate.getExpire(tokenKey), token,
+        refreshToken);
+    }
+
+    if (refreshToken != null) {
+      return new Token(null, null, refreshToken);
     }
 
     return null;
   }
 
-  private void setTokenToRedis(String username, String token) {
+  private void setTokenToRedis(String username, String token, String refreshToken) {
 
     String tokenKey = getTokenKeyInRedis(username);
+    String refreshTokenKey = getRefreshTokenKeyInRedis(username);
 
-    stringRedisTemplate.opsForValue().set(tokenKey, token, EXPIRED_ON_MINUTES, TimeUnit.MINUTES);
+    ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
+
+    operations.set(tokenKey, token, EXPIRED_ON_MINUTES, TimeUnit.MINUTES);
+    operations.set(refreshTokenKey, refreshToken, EXPIRED_ON_MINUTES * 2, TimeUnit.MINUTES);
   }
 
   private String getTokenKeyInRedis(String username) {
-    return RedisKeyConstants.REDIS_KET_TOKEN_PREFIX + username;
+    return RedisKeyConstants.REDIS_KEY_TOKEN_PREFIX + username;
   }
 
-  private ParseToken parseToken(String token) throws AuthenticationException {
+  private String getRefreshTokenKeyInRedis(String username) {
+    return RedisKeyConstants.REDIS_KEY_REFRESH_TOKEN_PREFIX + username;
+  }
+
+  private TokenData parseToken(String token) throws AuthenticationException {
     // 解析 token
     Claims claims = JwtUtils.parseToken(jwtConfig.getSecretKey(), token);
 
     // 获取用户名
-    String username = (String) claims.get(CommonConstants.TOKEN_USERNAME);
+    String username = (String) claims.get(TOKEN_USERNAME);
+
+    // 获取类型
+    String type = (String) claims.get(TOKEN_TYPE);
 
     if (Strings.isBlank(username)) {
-      throw new AuthenticationException("Token 主体不存在 " + CommonConstants.TOKEN_USERNAME);
+      throw new AuthenticationException("Token 主体不存在 " + TOKEN_USERNAME);
     }
 
-    return new ParseToken(username, claims.getNotBefore(), claims.getExpiration());
+    return new TokenData(username, type, claims.getNotBefore());
   }
 }

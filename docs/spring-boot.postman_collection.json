@@ -162,6 +162,7 @@
 									"const jsonData = pm.response.json();",
 									"if (jsonData.status === 'success') {",
 									"  pm.collectionVariables.set('token', jsonData.data.token);",
+									"  pm.collectionVariables.set('refreshToken', jsonData.data.refreshToken);",
 									"}"
 								],
 								"type": "text/javascript"
@@ -236,6 +237,60 @@
 								{
 									"key": "token",
 									"value": "{{token}}"
+								},
+								{
+									"key": "token",
+									"value": "{{refreshToken}}",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "网关- 刷新 Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"if (jsonData.status === 'success') {",
+									"  pm.collectionVariables.set('token', jsonData.data.token);",
+									"  pm.collectionVariables.set('refreshToken', jsonData.data.refreshToken);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{domain}}/auth/access_token/refresh?token={{refreshToken}}",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"auth",
+								"access_token",
+								"refresh"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"disabled": true
+								},
+								{
+									"key": "token",
+									"value": "{{refreshToken}}"
 								}
 							]
 						}
@@ -425,6 +480,7 @@
 									"const jsonData = pm.response.json();",
 									"if (jsonData.status === 'success') {",
 									"  pm.collectionVariables.set('token', jsonData.data.token);",
+									"  pm.collectionVariables.set('refreshToken', jsonData.data.refreshToken);",
 									"}"
 								],
 								"type": "text/javascript"
@@ -501,6 +557,61 @@
 								{
 									"key": "token",
 									"value": "{{token}}"
+								},
+								{
+									"key": "token",
+									"value": "{{refreshToken}}",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Auth - 刷新 Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"if (jsonData.status === 'success') {",
+									"  pm.collectionVariables.set('token', jsonData.data.token);",
+									"  pm.collectionVariables.set('refreshToken', jsonData.data.refreshToken);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "http://localhost:8080/access_token/refresh?token={{refreshToken}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"access_token",
+								"refresh"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"disabled": true
+								},
+								{
+									"key": "token",
+									"value": "{{refreshToken}}"
 								}
 							]
 						}
@@ -712,6 +823,10 @@
 		},
 		{
 			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "refreshToken",
 			"value": ""
 		}
 	]

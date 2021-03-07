@@ -4,8 +4,8 @@ import javax.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.wuxianjie.common.exception.AuthenticationException;
-import net.wuxianjie.jwt.model.CreateToken;
-import net.wuxianjie.jwt.model.ParseToken;
+import net.wuxianjie.jwt.model.Token;
+import net.wuxianjie.jwt.model.TokenData;
 import net.wuxianjie.jwt.service.AccessTokenService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +23,7 @@ public class AccessTokenController {
   private final AccessTokenService tokenService;
 
   @PostMapping
-  public CreateToken createToken(
+  public Token createToken(
     @NotBlank(message = "用户名不能为空") String username,
     @NotBlank(message = "密码不能为空") String password)
     throws AuthenticationException {
@@ -32,7 +32,12 @@ public class AccessTokenController {
   }
 
   @GetMapping("/verify")
-  public ParseToken verifyToken(@NotBlank(message = "Token 不能为空") String token) {
+  public TokenData verifyToken(@NotBlank(message = "Token 不能为空") String token) {
     return tokenService.verifyToken(token);
+  }
+
+  @PostMapping("/refresh")
+  public Token refreshToken(@NotBlank(message = "Token 不能为空") String token) {
+    return tokenService.refreshToken(token);
   }
 }

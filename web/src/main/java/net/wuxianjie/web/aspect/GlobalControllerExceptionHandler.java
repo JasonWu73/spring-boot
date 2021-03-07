@@ -69,6 +69,8 @@ public class GlobalControllerExceptionHandler {
   @ExceptionHandler(Throwable.class)
   public ResponseEntity<ResponseResult<Void>> handleThrowable(Throwable e) {
     log.error("默认异常处理", e);
-    return new ResponseEntity<>(ResponseResultWrappers.error(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+    return new ResponseEntity<>(ResponseResultWrappers.error(
+      e.getMessage() == null ? "Null Pointer Exception" : e.getMessage()),
+      HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
