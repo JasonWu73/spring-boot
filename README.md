@@ -50,4 +50,4 @@ Spring 框架学习项目
 2. 用于刷新的 Token 有效期是用于访问的两倍
 3. 刷新只有在访问 Token 过期后才能成功
 
-![Token 验证流程图](https://raw.githubusercontent.com/JasonWu73/spring-boot/master/docs/images/Token%20%E9%AA%8C%E8%AF%81.png)
+![Access Token 管理流程图](https://raw.githubusercontent.com/JasonWu73/spring-boot/master/docs/images/Access%20Token%20%E7%AE%A1%E7%90%86%E6%B5%81%E7%A8%8B%E5%9B%BE.png)
