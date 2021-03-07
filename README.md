@@ -49,3 +49,5 @@ Spring 框架学习项目
 1. 生成 Token 分为两类: (1) 用户于访问; (2) 用于刷新 (可避免输入用户名密码)
 2. 用于刷新的 Token 有效期是用于访问的两倍
 3. 刷新只有在访问 Token 过期后才能成功
+
+![Token 验证流程图](https://raw.githubusercontent.com/JasonWu73/spring-boot/master/docs/images/Token%20%E9%AA%8C%E8%AF%81.png)
