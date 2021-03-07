@@ -30,5 +30,6 @@ Spring 框架学习项目
 ├── docs // 非 Maven 模块 (存放一些文档资源等)
 ├── elasticsearch // Elasticsearch (web 项目)
 ├── gateway // Spring Cloud Gateway (web 网关)
+├── redis // Redis (web 项目)
 └── web // 公共 Spring Boot web 配置模块 (jar 项目)
 ```

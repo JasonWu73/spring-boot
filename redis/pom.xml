@@ -13,6 +13,12 @@
   <artifactId>redis</artifactId>
 
   <dependencies>
+    <!-- Spring Boot Web -->
+    <dependency>
+      <groupId>net.wuxianjie</groupId>
+      <artifactId>web</artifactId>
+    </dependency>
+
     <!-- Spring Data Redis (Access + Driver) -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
