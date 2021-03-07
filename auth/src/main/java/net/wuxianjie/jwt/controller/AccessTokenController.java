@@ -31,13 +31,13 @@ public class AccessTokenController {
     return tokenService.getOrCreateToken(username, password);
   }
 
-  @GetMapping("/verify")
-  public TokenData verifyToken(@NotBlank(message = "Token 不能为空") String token) {
-    return tokenService.verifyToken(token);
-  }
-
   @PostMapping("/refresh")
   public Token refreshToken(@NotBlank(message = "Token 不能为空") String token) {
     return tokenService.refreshToken(token);
+  }
+
+  @GetMapping("/verify")
+  public TokenData verifyToken(@NotBlank(message = "Token 不能为空") String token) {
+    return tokenService.verifyToken(token);
   }
 }

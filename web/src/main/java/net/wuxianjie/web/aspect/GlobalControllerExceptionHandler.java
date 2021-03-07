@@ -7,6 +7,7 @@ import javax.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import net.wuxianjie.common.exception.AuthenticationException;
 import net.wuxianjie.common.exception.AuthorizationException;
+import net.wuxianjie.common.exception.BadRequestException;
 import net.wuxianjie.common.model.ResponseResult;
 import net.wuxianjie.common.util.ResponseResultWrappers;
 import org.springframework.http.HttpStatus;
@@ -64,6 +65,12 @@ public class GlobalControllerExceptionHandler {
   public ResponseEntity<ResponseResult<Void>> handleAuthorizationExceptionException(AuthorizationException e) {
     log.warn("授权认证失败: {}", e.getMessage());
     return new ResponseEntity<>(ResponseResultWrappers.error(e.getMessage()), HttpStatus.FORBIDDEN);
+  }
+
+  @ExceptionHandler(BadRequestException.class)
+  public ResponseEntity<ResponseResult<Void>> handleBadRequestException(BadRequestException e) {
+    log.warn("客户端请求错误: {}", e.getMessage());
+    return new ResponseEntity<>(ResponseResultWrappers.error(e.getMessage()), HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(Throwable.class)
