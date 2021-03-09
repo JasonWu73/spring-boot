@@ -21,6 +21,12 @@ Spring 框架学习项目
 127.0.0.1 api.wxj.com
 ```
 
+## 文档目录
+
+- [项目目录结构](#项目目录结构)
+- [Token 续期策略](#Token-续期策略)
+    - [前端 Token 获取及续期代码 (JavaScript)](#前端-Token-代码-(JavaScript))
+
 ## 项目目录结构
 
 ```
