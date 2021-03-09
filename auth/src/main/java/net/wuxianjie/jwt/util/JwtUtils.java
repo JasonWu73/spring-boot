@@ -10,8 +10,10 @@ import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import java.util.Date;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import net.wuxianjie.common.exception.AuthenticationException;
 
+@Slf4j
 public class JwtUtils {
 
   public static String generateToken(String secretKey, Map<String, Object> claims) {
@@ -36,11 +38,14 @@ public class JwtUtils {
       return jws.getBody();
 
     } catch (MalformedJwtException e) {
-      throw new AuthenticationException("Token 格式错误: " + e.getMessage(), e);
+      log.warn("Token 格式错误: " + e.getMessage());
+      throw new AuthenticationException("Token 格式错误", e);
     } catch (SignatureException e) {
-      throw new AuthenticationException("Token 签名错误: " + e.getMessage(), e);
+      log.warn("Token 签名错误: " + e.getMessage());
+      throw new AuthenticationException("Token 签名错误", e);
     } catch (ExpiredJwtException e) {
-      throw new AuthenticationException("Token 已过期: " + e.getMessage(), e);
+      log.warn("Token 已过期: " + e.getMessage());
+      throw new AuthenticationException("Token 已过期", e);
     }
   }
 }

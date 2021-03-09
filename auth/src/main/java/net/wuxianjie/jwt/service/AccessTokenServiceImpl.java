@@ -82,8 +82,8 @@ public class AccessTokenServiceImpl implements AccessTokenService {
       RedisKeyConstants.REFRESH_TOKEN_PREFIX + username);
 
     // 比较传入的 Token 与 Redis 中的 Token
-    if (!refreshToken.equals(token)) {
-      throw new AuthenticationException("Token 不匹配");
+    if (refreshToken == null || !refreshToken.equals(token)) {
+      throw new AuthenticationException("Token 已过期");
     }
 
     // Redis 中是否已存在 Access Token
