@@ -3,13 +3,13 @@ PUT /news
 PUT /news/_mapping
 {
   "properties": {
-    "news_title": {
+    "title": {
      "type": "text"
     },
-    "news_type": {
+    "type": {
       "type": "keyword"
     },
-    "news_add_time": {
+    "createdAt": {
       "type": "date",
       "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
     }
@@ -22,16 +22,16 @@ DELETE /news
 
 PUT /news/_doc/113
 {
-  "news_title": "谷歌为Chrome浏览器带来Live Captions实时翻译功能",
-  "news_type": "Chrome",
-  "news_add_time": "2021-02-28 18:03:00"
+  "title": "谷歌为Chrome浏览器带来Live Captions实时翻译功能",
+  "type": "Chrome",
+  "createdAt": "2021-02-28 18:03:00"
 }
 
 PUT /news/_doc/114
 {
-  "news_title": "Facebook推出主打说唱体验的实验性BARS短视频服务",
-  "news_type": "Facebook",
-  "news_add_time": "2021-02-28 19:32:00"
+  "title": "Facebook推出主打说唱体验的实验性BARS短视频服务",
+  "type": "Facebook",
+  "createdAt": "2021-02-28 19:32:00"
 }
 
 GET /news/_search
@@ -46,7 +46,7 @@ GET /news/_search
 {
   "query": {
     "term": {
-      "news_type": {
+      "type": {
         "value": "Google"
       }
     }
@@ -64,7 +64,7 @@ GET /news/_search
 {
   "query": {
     "match": {
-      "news_title": "Chrome"
+      "title": "Chrome"
     }
   }
 }

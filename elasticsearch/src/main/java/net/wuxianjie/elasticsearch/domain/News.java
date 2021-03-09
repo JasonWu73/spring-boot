@@ -18,14 +18,14 @@ public class News {
   @Id
   private Integer id;
 
-  @Field(name = "news_title", type = FieldType.Text)
+  @Field(name = "title", type = FieldType.Text)
   private String title;
 
-  @Field(name = "news_type", type = FieldType.Keyword)
+  @Field(name = "type", type = FieldType.Keyword)
   private String type;
 
-  @Field(name = "news_add_time", type = FieldType.Date,
+  @Field(name = "created_at", type = FieldType.Date,
       format = DateFormat.custom, pattern = "uuuu-MM-dd HH:mm:ss")
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-  private LocalDateTime addTime;
+  private LocalDateTime createdAt;
 }

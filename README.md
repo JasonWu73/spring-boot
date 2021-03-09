@@ -188,7 +188,7 @@ export {URL_GET_TOKEN, httpClient, saveToken};
     :data="bookList"
     style="width: 100%">
     <el-table-column
-      prop="addTime"
+      prop="createdAt"
       label="日期"
       width="180">
     </el-table-column>

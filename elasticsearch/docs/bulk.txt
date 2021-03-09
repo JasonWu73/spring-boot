@@ -1,28 +1,28 @@
 POST /_bulk
 { "index" : { "_index" : "news", "_id" : "101" } }
-{ "news_title" : "深度学习如何处理人类语言？探究谷歌多语言模型背后的奥秘", "news_type": "Google", "news_add_time": "2021-02-28 16:39:00" }
+{ "title" : "深度学习如何处理人类语言？探究谷歌多语言模型背后的奥秘", "type": "Google", "created_at": "2021-02-28 16:39:00" }
 { "index" : { "_index" : "news", "_id" : "102" } }
-{ "news_title" : "微软正更换头梁断裂的Surface Headphones 但暂未对外承认缺陷", "news_type": "微软", "news_add_time": "2021-02-28 17:51:00" }
+{ "title" : "微软正更换头梁断裂的Surface Headphones 但暂未对外承认缺陷", "type": "微软", "created_at": "2021-02-28 17:51:00" }
 { "index" : { "_index" : "news", "_id" : "103" } }
-{ "news_title" : "微软放大：Win10将全面支持运行安卓APP", "news_type": "微软", "news_add_time": "2021-02-28 15:20:00" }
+{ "title" : "微软放大：Win10将全面支持运行安卓APP", "type": "微软", "created_at": "2021-02-28 15:20:00" }
 { "index" : { "_index" : "news", "_id" : "104" } }
-{ "news_title" : "微软正努力改善Chrome和Edge浏览器上的拼写检查功能", "news_type": "微软", "news_add_time": "2021-02-20 11:00:00" }
+{ "title" : "微软正努力改善Chrome和Edge浏览器上的拼写检查功能", "type": "微软", "created_at": "2021-02-20 11:00:00" }
 { "index" : { "_index" : "news", "_id" : "105" } }
-{ "news_title" : "用苹果买App会员比安卓贵 上海一用户起诉苹果公司获受理", "news_type": "苹果", "news_add_time": "2021-02-28 09:27:00" }
+{ "title" : "用苹果买App会员比安卓贵 上海一用户起诉苹果公司获受理", "type": "苹果", "created_at": "2021-02-28 09:27:00" }
 { "index" : { "_index" : "news", "_id" : "106" } }
-{ "news_title" : "苹果奖励CEO库克100万股票：价值上亿美元", "news_type": "苹果", "news_add_time": "2021-02-24 12:55:00" }
+{ "title" : "苹果奖励CEO库克100万股票：价值上亿美元", "type": "苹果", "created_at": "2021-02-24 12:55:00" }
 { "index" : { "_index" : "news", "_id" : "107" } }
-{ "news_title" : "苹果发布iOS 14.5新版：用户可以更改更多默认应用！", "news_type": "苹果", "news_add_time": "2021-02-22 09:26:00" }
+{ "title" : "苹果发布iOS 14.5新版：用户可以更改更多默认应用！", "type": "苹果", "created_at": "2021-02-22 09:26:00" }
 { "index" : { "_index" : "news", "_id" : "108" } }
-{ "news_title" : "苹果春季发布会3月16日举行：新iPad/mini屏幕、配置全升级", "news_type": "苹果", "news_add_time": "2021-02-18 11:33:00" }
+{ "title" : "苹果春季发布会3月16日举行：新iPad/mini屏幕、配置全升级", "type": "苹果", "created_at": "2021-02-18 11:33:00" }
 { "index" : { "_index" : "news", "_id" : "109" } }
-{ "news_title" : "谷歌新的Lyra语音编解码+AV1可以实现56kbps低带宽视频聊天", "news_type": "Google", "news_add_time": "2021-02-28 09:00:00" }
+{ "title" : "谷歌新的Lyra语音编解码+AV1可以实现56kbps低带宽视频聊天", "type": "Google", "created_at": "2021-02-28 09:00:00" }
 { "index" : { "_index" : "news", "_id" : "110" } }
-{ "news_title" : "2020全球CEO年薪大榜：劈柴哥年入2.8亿美元登顶", "news_type": "Google", "news_add_time": "2021-02-27 12:37:00" }
+{ "title" : "2020全球CEO年薪大榜：劈柴哥年入2.8亿美元登顶", "type": "Google", "created_at": "2021-02-27 12:37:00" }
 { "index" : { "_index" : "news", "_id" : "111" } }
-{ "news_title" : "谷歌宣布开放Sleep API：用更省电的方式追踪用户睡眠", "news_type": "Google", "news_add_time": "2021-02-26 17:15:00" }
+{ "title" : "谷歌宣布开放Sleep API：用更省电的方式追踪用户睡眠", "type": "Google", "created_at": "2021-02-26 17:15:00" }
 { "index" : { "_index" : "news", "_id" : "112" } }
-{ "news_title" : "不止华为Mate X2：曝谷歌折叠屏Pixel手机年内登场", "news_type": "Google", "news_add_time": "2021-02-26 14:13:00" }
+{ "title" : "不止华为Mate X2：曝谷歌折叠屏Pixel手机年内登场", "type": "Google", "created_at": "2021-02-26 14:13:00" }
 
 GET /news/_count
 
@@ -41,13 +41,13 @@ PUT /news
 PUT /news/_mapping
 {
   "properties": {
-     "news_title": {
+     "title": {
        "type": "text"
      },
-     "news_type": {
+     "type": {
        "type": "keyword"
      },
-     "news_add_time": {
+     "created_at": {
        "type": "date",
        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
      }

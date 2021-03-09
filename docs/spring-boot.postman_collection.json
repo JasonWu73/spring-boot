@@ -687,7 +687,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"title\": \"测试新闻开头\",\n  \"type\": \"测试\",\n  \"addTime\": \"2021-03-06 13:29:37\"\n}",
+							"raw": "{\n  \"title\": \"测试新闻开头\",\n  \"type\": \"测试\",\n  \"createdAt\": \"2021-03-06 13:29:37\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
