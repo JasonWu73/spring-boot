@@ -4,11 +4,14 @@ import net.wuxianjie.common.model.ResponseResult;
 
 public class ResponseResultWrappers {
 
+  public static final String STATUS_SUCCESS = "success";
+  public static final String STATUS_FAIL = "fail";
+
   public static <T> ResponseResult<T> success(T data) {
 
     ResponseResult<T> result = new ResponseResult<>();
 
-    result.setStatus("success");
+    result.setStatus(STATUS_SUCCESS);
     result.setData(data);
 
     return result;
@@ -18,7 +21,7 @@ public class ResponseResultWrappers {
 
     ResponseResult<Void> result = new ResponseResult<>();
 
-    result.setStatus("error");
+    result.setStatus(STATUS_FAIL);
     result.setError(errorMsg);
 
     return result;

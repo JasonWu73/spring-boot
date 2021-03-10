@@ -12,6 +12,7 @@ import net.wuxianjie.common.constant.CommonConstants;
 import net.wuxianjie.common.exception.AuthenticationException;
 import net.wuxianjie.common.exception.HttpStatusException;
 import net.wuxianjie.common.model.ResponseResult;
+import net.wuxianjie.common.util.ResponseResultWrappers;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -115,7 +116,8 @@ public class TokenCheckGatewayFilterFactory
     JsonNode authBody = Objects.requireNonNull(authResponse.getBody());
 
     if (!authBody.get("status").asText().equals("success")) {
-      throw new HttpStatusException(authResponse.getStatusCode(), authBody.get("error").asText());
+      throw new HttpStatusException(authResponse.getStatusCode(),
+        authBody.get(ResponseResultWrappers.STATUS_FAIL).asText());
     }
 
     JsonNode authData = authBody.get("data");
