@@ -5,6 +5,10 @@ server:
   port: 80
 
 spring:
+  redis:
+    host: localhost
+    port: 6379
+
   cloud:
     gateway:
       globalcors:
@@ -41,6 +45,12 @@ spring:
           filters:
             - RewritePath=/es/(?<path>.*),/$\{path}
             # 顺序相关
+            - name: RequestRateLimiter
+              # 1 QPS
+              args:
+                redis-rate-limiter.replenishRate: 1
+                redis-rate-limiter.burstCapacity: 1
+                redis-rate-limiter.requestedTokens: 1
             - TokenCheck
             - PrePostHeader=developer,xuxianjie-es
             - name: CircuitBreaker
