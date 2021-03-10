@@ -108,8 +108,8 @@ httpClient.interceptors.request.use(async config => {
       const response = await httpClient.post(URL_REFRESH_TOKEN, params);
       saveToken(response.data.data);
     } catch (err) {
-      console.error(`Token 续期失败: ${err?.response?.data?.fail}`);
-      throw new Error(`${err?.response?.data?.fail}, 请重新登录`);
+      console.error(`Token 续期失败: ${err.response?.data?.fail}`);
+      throw new Error(`${err.response?.data?.fail}, 请重新登录`);
     }
   }
 
@@ -167,7 +167,7 @@ export {URL_GET_TOKEN, httpClient, saveToken};
 
           alert('登录成功');
         } catch (err) {
-          alert(`${err?.response?.data?.fail || err.message} 💥`);
+          alert(`${err.response?.data?.fail || err.message} 💥`);
         }
       }
     }
@@ -225,7 +225,7 @@ export {URL_GET_TOKEN, httpClient, saveToken};
           const {data} = response.data;
           this.bookList = data;
         } catch (err) {
-          alert(`${err?.response?.data?.fail || err.message} 💥`);
+          alert(`${err.response?.data?.fail || err.message} 💥`);
         }
       }
     }
