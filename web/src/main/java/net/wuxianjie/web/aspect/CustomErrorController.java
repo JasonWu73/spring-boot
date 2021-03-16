@@ -27,8 +27,8 @@ public class CustomErrorController implements ErrorController {
     this.errorAttributes = errorAttributes;
   }
 
-  @RequestMapping
   @ResponseBody
+  @RequestMapping
   public ResponseEntity<ResponseResult<Void>> handleErrorResponse(WebRequest request) {
 
     Map<String, Object> errorMap = errorAttributes.getErrorAttributes(request,
