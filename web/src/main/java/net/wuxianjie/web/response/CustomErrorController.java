@@ -1,4 +1,4 @@
-package net.wuxianjie.web.aspect;
+package net.wuxianjie.web.response;
 
 import java.util.Map;
 import java.util.Objects;
@@ -43,7 +43,7 @@ public class CustomErrorController implements ErrorController {
       log.error("全局异常处理: {}", errorMap);
     }
 
-    return new ResponseEntity<>(ResponseResultWrappers.error(error),
+    return new ResponseEntity<>(ResponseResultWrappers.fail(error),
       Objects.requireNonNull(HttpStatus.resolve(httpStatus)));
   }
 
@@ -54,6 +54,6 @@ public class CustomErrorController implements ErrorController {
 
   @Override
   public String getErrorPath() {
-    return "/error";
+    return "/fail";
   }
 }

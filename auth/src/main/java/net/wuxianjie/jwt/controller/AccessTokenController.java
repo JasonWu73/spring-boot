@@ -1,5 +1,6 @@
 package net.wuxianjie.jwt.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import javax.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,18 +27,18 @@ public class AccessTokenController {
   public Token createToken(
     @NotBlank(message = "用户名不能为空") String username,
     @NotBlank(message = "密码不能为空") String password)
-    throws AuthenticationException {
+    throws AuthenticationException, JsonProcessingException {
 
     return tokenService.getOrCreateToken(username, password);
   }
 
   @PostMapping("/refresh")
-  public Token refreshToken(@NotBlank(message = "Token 不能为空") String token) {
+  public Token refreshToken(@NotBlank(message = "Token 不能为空") String token) throws JsonProcessingException {
     return tokenService.refreshToken(token);
   }
 
   @GetMapping("/verify")
-  public TokenData verifyToken(@NotBlank(message = "Token 不能为空") String token) {
+  public TokenData verifyToken(@NotBlank(message = "Token 不能为空") String token) throws JsonProcessingException {
     return tokenService.verifyToken(token);
   }
 }

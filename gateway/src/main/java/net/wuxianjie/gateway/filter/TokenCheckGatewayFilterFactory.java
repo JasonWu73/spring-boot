@@ -106,7 +106,7 @@ public class TokenCheckGatewayFilterFactory
         };
         ResponseResult<Void> errorResponse = objectMapper.readValue(e.getResponseBodyAsString(), ref);
 
-        throw new HttpStatusException(e.getStatusCode(), errorResponse.getError());
+        throw new HttpStatusException(e.getStatusCode(), errorResponse.getMessage());
 
       } catch (JsonProcessingException e1) {
         throw new HttpStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e1.getMessage());

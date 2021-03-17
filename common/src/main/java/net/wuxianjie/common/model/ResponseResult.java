@@ -8,15 +8,15 @@ public class ResponseResult<T> {
   /**
    * <ul>
    *   <li>成功: {@code success}</li>
-   *   <li>失败: {@code error}</li>
+   *   <li>失败: {@code fail}</li>
    * </ul>
    */
   private String status;
 
   /**
-   * 错误信息
+   * 失败时提示信息
    */
-  private String error;
+  private String message;
 
   /**
    * 结果字段

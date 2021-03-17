@@ -4,6 +4,13 @@ my:
 server:
   port: 80
 
+  # 在响应头中添加返回数据所使用的字符集
+  # `Content-Type: application/json;charset=UTF-8`
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+
 spring:
   redis:
     host: localhost

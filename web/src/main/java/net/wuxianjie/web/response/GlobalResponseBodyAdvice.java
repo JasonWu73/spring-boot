@@ -1,4 +1,4 @@
-package net.wuxianjie.web.aspect;
+package net.wuxianjie.web.response;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -1,4 +1,4 @@
-package net.wuxianjie.web.aspect;
+package net.wuxianjie.web.response;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,14 +25,14 @@ public class GlobalControllerExceptionHandler {
   public ResponseEntity<ResponseResult<Void>> handleHttpRequestMethodNotSupportedException(
     HttpRequestMethodNotSupportedException e) {
     log.warn("请求方法不支持: {}", e.getMessage());
-    return new ResponseEntity<>(ResponseResultWrappers.error(e.getMessage()), HttpStatus.METHOD_NOT_ALLOWED);
+    return new ResponseEntity<>(ResponseResultWrappers.fail(e.getMessage()), HttpStatus.METHOD_NOT_ALLOWED);
   }
 
   @ExceptionHandler(MissingRequestHeaderException.class)
   public ResponseEntity<ResponseResult<Void>> handleMissingRequestHeaderException(
     MissingRequestHeaderException e) {
     log.warn("缺少必要的请求头: {}", e.getMessage());
-    return new ResponseEntity<>(ResponseResultWrappers.error("缺少必要的请求头"), HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(ResponseResultWrappers.fail("缺少必要的请求头"), HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(ConstraintViolationException.class)
@@ -51,32 +51,32 @@ public class GlobalControllerExceptionHandler {
 
     log.warn("参数错误: {}", String.join("; ", errorsForLog));
 
-    return new ResponseEntity<>(ResponseResultWrappers.error(String.join("; ", errors))
+    return new ResponseEntity<>(ResponseResultWrappers.fail(String.join("; ", errors))
       , HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(AuthenticationException.class)
   public ResponseEntity<ResponseResult<Void>> handleAuthenticationExceptionException(AuthenticationException e) {
     log.warn("身份验证失败: {}", e.getMessage());
-    return new ResponseEntity<>(ResponseResultWrappers.error(e.getMessage()), HttpStatus.UNAUTHORIZED);
+    return new ResponseEntity<>(ResponseResultWrappers.fail(e.getMessage()), HttpStatus.UNAUTHORIZED);
   }
 
   @ExceptionHandler(AuthorizationException.class)
   public ResponseEntity<ResponseResult<Void>> handleAuthorizationExceptionException(AuthorizationException e) {
     log.warn("授权认证失败: {}", e.getMessage());
-    return new ResponseEntity<>(ResponseResultWrappers.error(e.getMessage()), HttpStatus.FORBIDDEN);
+    return new ResponseEntity<>(ResponseResultWrappers.fail(e.getMessage()), HttpStatus.FORBIDDEN);
   }
 
   @ExceptionHandler(BadRequestException.class)
   public ResponseEntity<ResponseResult<Void>> handleBadRequestException(BadRequestException e) {
     log.warn("客户端请求错误: {}", e.getMessage());
-    return new ResponseEntity<>(ResponseResultWrappers.error(e.getMessage()), HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(ResponseResultWrappers.fail(e.getMessage()), HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(Throwable.class)
   public ResponseEntity<ResponseResult<Void>> handleThrowable(Throwable e) {
     log.error("默认异常处理", e);
-    return new ResponseEntity<>(ResponseResultWrappers.error(
+    return new ResponseEntity<>(ResponseResultWrappers.fail(
       e.getMessage() == null ? "Null Pointer Exception" : e.getMessage()),
       HttpStatus.INTERNAL_SERVER_ERROR);
   }

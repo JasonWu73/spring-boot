@@ -17,12 +17,12 @@ public class ResponseResultWrappers {
     return result;
   }
 
-  public static ResponseResult<Void> error(String errorMsg) {
+  public static ResponseResult<Void> fail(String failMsg) {
 
     ResponseResult<Void> result = new ResponseResult<>();
 
     result.setStatus(STATUS_FAIL);
-    result.setError(errorMsg);
+    result.setMessage(failMsg);
 
     return result;
   }

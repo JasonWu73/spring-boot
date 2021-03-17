@@ -1,19 +1,25 @@
 package net.wuxianjie.jwt.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import net.wuxianjie.common.exception.AuthenticationException;
 import net.wuxianjie.common.exception.BadRequestException;
 import net.wuxianjie.jwt.config.JwtConfig;
 import net.wuxianjie.jwt.constant.RedisKeyConstants;
+import net.wuxianjie.jwt.model.AuthData;
 import net.wuxianjie.jwt.model.Token;
 import net.wuxianjie.jwt.model.TokenData;
+import net.wuxianjie.jwt.model.User;
 import net.wuxianjie.jwt.util.JwtUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,50 +27,59 @@ import org.springframework.stereotype.Service;
 public class AccessTokenServiceImpl implements AccessTokenService {
 
   public static final String TOKEN_USERNAME = "user";
-
   public static final String TOKEN_TYPE = "type";
-
   public static final String TOKEN_TYPE_REFRESH_VALUE = "refresh";
-
   public static final int TOKEN_EXPIRED_ON_MINUTES = 1;
 
-  private final JwtConfig jwtConfig;
+  /**
+   * 编码后的编码: 123
+   */
+  public static final String ENCODED_PASSWORD = "$2a$10$9Tq5H9wCOiRg97zR5K.6ye.5TIAQUVhDPFhm5YsbvSgpJhwTj3.yW";
 
+  private final JwtConfig jwtConfig;
+  private final PasswordEncoder passwordEncoder;
+  private final ObjectMapper objectMapper;
   private final StringRedisTemplate stringRedisTemplate;
 
   @Override
   public Token getOrCreateToken(String username, String password)
-    throws AuthenticationException {
+    throws AuthenticationException, JsonProcessingException {
 
     // 判断用户名密码是否正确
-    boolean validUser = isValidUser(username, password);
-    if (!validUser) {
+    User validUser = getValidUser(username, password);
+    if (validUser == null) {
       throw new AuthenticationException("用户名或密码错误");
     }
 
     // 从 Redis 中查询 Access Token
-    String accessToken = getTokenFromRedis(
+    AuthData accessAuthData = getTokenFromRedis(
       RedisKeyConstants.ACCESS_TOKEN_PREFIX + username);
 
-    if (accessToken != null) {
+    if (accessAuthData != null) {
       // 从 Redis 中查询 Access Token 有效期
       long expireSeconds = ttlTokenFromRedis(
         RedisKeyConstants.ACCESS_TOKEN_PREFIX + username);
 
       // 从 Redis 中查询 Refresh Token
-      String refreshToken = getTokenFromRedis(
+      AuthData refreshAuthData = getTokenFromRedis(
         RedisKeyConstants.REFRESH_TOKEN_PREFIX + username);
 
-      return new Token(expireSeconds, accessToken, refreshToken);
+      return new Token(expireSeconds, accessAuthData.getToken(), Objects.requireNonNull(refreshAuthData).getToken());
     }
 
+    // 构造写入 Redis 中的用户数据
+    AuthData authData = new AuthData();
+    authData.setUserId(validUser.getUserId());
+    authData.setUsername(validUser.getUsername());
+    authData.setRoles(validUser.getRoles());
+
     // 生成 Access Token 与 Refresh Token
-    return generateToken(username);
+    return generateToken(authData);
   }
 
   @Override
   public Token refreshToken(String token)
-    throws AuthenticationException, BadRequestException {
+    throws AuthenticationException, BadRequestException, JsonProcessingException {
     // 解析 Token
     Claims claims = JwtUtils.parseToken(jwtConfig.getSecretKey(), token);
     String username = (String) claims.get(TOKEN_USERNAME);
@@ -78,11 +93,11 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     }
 
     // 从 Redis 中查询 Refresh Token
-    String refreshToken = getTokenFromRedis(
+    AuthData authData = getTokenFromRedis(
       RedisKeyConstants.REFRESH_TOKEN_PREFIX + username);
 
     // 比较传入的 Token 与 Redis 中的 Token
-    if (refreshToken == null || !refreshToken.equals(token)) {
+    if (authData == null || !authData.getToken().equals(token)) {
       throw new AuthenticationException("Token 已过期");
     }
 
@@ -95,11 +110,11 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     }
 
     // 生成 Access Token 与 Refresh Token
-    return generateToken(username);
+    return generateToken(authData);
   }
 
   @Override
-  public TokenData verifyToken(String token) throws AuthenticationException {
+  public TokenData verifyToken(String token) throws AuthenticationException, JsonProcessingException {
     // 解析 Token
     Claims claims = JwtUtils.parseToken(jwtConfig.getSecretKey(), token);
     String username = (String) claims.get(TOKEN_USERNAME);
@@ -115,10 +130,10 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     }
 
     // 从 Redis 中查询 Token
-    String tokenInRedis = getTokenFromRedis(keyPrefix + username);
+    AuthData authData = getTokenFromRedis(keyPrefix + username);
 
     // 比较传入的 Token 与 Redis 中的 Token
-    if (tokenInRedis == null || !tokenInRedis.equals(token)) {
+    if (authData == null || !authData.getToken().equals(token)) {
       throw new AuthenticationException("Token 已过期");
     }
 
@@ -126,36 +141,59 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     return new TokenData(username, type, notBefore);
   }
 
-  private boolean isValidUser(String username, String password) {
-    return (username.equals("wxj") && password.equals("123")) ||
-      (username.equals("jason") && password.equals("123")) ||
-      (username.equals("bruce") && password.equals("123"));
+  private User getValidUser(String username, String password) {
+
+    User guest = new User(1, "guest", ENCODED_PASSWORD, "");
+    User user = new User(2, "user", ENCODED_PASSWORD, "user");
+    User admin = new User(3, "admin", ENCODED_PASSWORD, "user,admin");
+
+    if (guest.getUsername().equals(username) && passwordEncoder.matches(password, guest.getPassword())) {
+      return guest;
+    }
+
+    if (user.getUsername().equals(username) && passwordEncoder.matches(password, user.getPassword())) {
+      return user;
+    }
+
+    if (admin.getUsername().equals(username) && passwordEncoder.matches(password, admin.getPassword())) {
+      return admin;
+    }
+
+    return null;
   }
 
-  private String getTokenFromRedis(String key) {
-    return stringRedisTemplate.opsForValue().get(key);
+  private AuthData getTokenFromRedis(String key) throws JsonProcessingException {
+
+    String authStr = stringRedisTemplate.opsForValue().get(key);
+    if (authStr == null) {
+      return null;
+    }
+
+    return objectMapper.readValue(authStr, AuthData.class);
   }
 
   private Long ttlTokenFromRedis(String key) {
     return stringRedisTemplate.getExpire(key);
   }
 
-  private void saveTokenToRedis(String username, String accessToken, String refreshToken) {
-
+  private void saveTokenToRedis(AuthData authData, String accessToken, String refreshToken) throws JsonProcessingException {
+    // 存入 Access Token
+    authData.setToken(accessToken);
     stringRedisTemplate.opsForValue().set(
-      RedisKeyConstants.ACCESS_TOKEN_PREFIX + username,
-      accessToken, TOKEN_EXPIRED_ON_MINUTES, TimeUnit.MINUTES);
+      RedisKeyConstants.ACCESS_TOKEN_PREFIX + authData.getUsername(),
+      objectMapper.writeValueAsString(authData), TOKEN_EXPIRED_ON_MINUTES, TimeUnit.MINUTES);
 
     // Refresh Token 是 Access Token 的两倍有效期
+    authData.setToken(refreshToken);
     stringRedisTemplate.opsForValue().set(
-      RedisKeyConstants.REFRESH_TOKEN_PREFIX + username,
-      refreshToken, TOKEN_EXPIRED_ON_MINUTES * 2, TimeUnit.MINUTES);
+      RedisKeyConstants.REFRESH_TOKEN_PREFIX + authData.getUsername(),
+      objectMapper.writeValueAsString(authData), TOKEN_EXPIRED_ON_MINUTES * 2, TimeUnit.MINUTES);
   }
 
-  private Token generateToken(String username) {
+  private Token generateToken(AuthData authData) throws JsonProcessingException {
     // 构造 JWT 主体声明
     Map<String, Object> claims = new HashMap<>();
-    claims.put(TOKEN_USERNAME, username);
+    claims.put(TOKEN_USERNAME, authData.getUsername());
 
     // 生成 Access Token
     String accessToken = JwtUtils.generateToken(jwtConfig.getSecretKey(), claims);
@@ -165,7 +203,7 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     String refreshToken = JwtUtils.generateToken(jwtConfig.getSecretKey(), claims);
 
     // 存入 Redis
-    saveTokenToRedis(username, accessToken, refreshToken);
+    saveTokenToRedis(authData, accessToken, refreshToken);
 
     return new Token(TOKEN_EXPIRED_ON_MINUTES * 60L, accessToken, refreshToken);
   }

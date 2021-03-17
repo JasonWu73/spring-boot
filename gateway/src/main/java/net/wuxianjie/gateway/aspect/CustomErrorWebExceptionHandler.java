@@ -59,7 +59,7 @@ public class CustomErrorWebExceptionHandler implements ErrorWebExceptionHandler 
         DataBufferFactory bufferFactory = response.bufferFactory();
         try {
           return bufferFactory.wrap(objectMapper.writeValueAsBytes(
-            ResponseResultWrappers.error(
+            ResponseResultWrappers.fail(
               ex.getMessage() != null ? ex.getMessage() : "Null Pointer Exception")));
         } catch (JsonProcessingException e) {
           log.error("响应时数据异常", ex);
